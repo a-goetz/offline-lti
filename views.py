@@ -61,6 +61,7 @@ def launch(lti=lti):
     # variables can be found here:
     # https://github.com/instructure/canvas-lms/blob/stable/gems/lti_outbound/lib/lti_outbound/tool_launch.rb
     session['lis_person_name_full'] = request.form.get('lis_person_name_full')
+    session['custom_canvas_user_id'] = request.form.get('custom_canvas_user_id')
 
     session['custom_canvas_course_id'] = request.form.get(
         'custom_canvas_course_id')
@@ -101,7 +102,13 @@ def selected_items():
         ) for url in request.form.getlist('module_items')
     ]
 
-    with ZipFile('course-archive.zip', 'w') as z_file:
+    static = 'static/'
+    download_location = 'downloads/' + \
+        session['custom_canvas_user_id'] + \
+        session['context_title'] + 'course-archive.zip'
+    download_to = static + download_location
+
+    with ZipFile(download_to, 'w') as z_file:
         for obj in form_data:
             z_file.writestr(
                 obj.file_path,
@@ -111,7 +118,9 @@ def selected_items():
     return render_template(
         'download_page.htm.j2',
         data=form_data,
-        item_count=len(form_data))
+        item_count=len(form_data),
+        download_location=download_location
+    )
 
 
 # Home page
