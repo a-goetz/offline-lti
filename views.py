@@ -1,9 +1,12 @@
 from flask import Flask, render_template, session, request, Response
+from zipfile import ZipFile
 from pylti.flask import lti
-import settings
 import logging
 import json
 from logging.handlers import RotatingFileHandler
+
+import settings
+import canvas_objects
 
 app = Flask(__name__)
 app.secret_key = settings.secret_key
@@ -55,15 +58,60 @@ def launch(lti=lti):
 
     # example of getting lti data from the request
     # let's just store it in our session
+    # variables can be found here:
+    # https://github.com/instructure/canvas-lms/blob/stable/gems/lti_outbound/lib/lti_outbound/tool_launch.rb
     session['lis_person_name_full'] = request.form.get('lis_person_name_full')
 
+    session['custom_canvas_course_id'] = request.form.get(
+        'custom_canvas_course_id')
+    session['context_title'] = request.form.get(
+        'context_title')
+
+    # username = session['lis_person_name_full']
+    coursename = session['context_title']
+    cid = session['custom_canvas_course_id']
+
+    this_course = canvas_objects.Course(name=coursename, cid=cid)
+    these_modules = this_course.get_modules()
+
+    return render_template(
+        'modules_list.htm.j2',
+        course_obj=this_course,
+        module_list=these_modules)
+'''
     # Write the lti params to the console
     app.logger.info(json.dumps(request.form, indent=2))
 
     return render_template(
         'launch.htm.j2',
-        lis_person_name_full=session['lis_person_name_full']
+        username=username,
+        coursename=coursename
     )
+'''
+
+
+@app.route("/selected_items/", methods=['POST'])
+def selected_items():
+    #  This should return a list of the urls of all the checked boxes
+    # body html uses unicode
+
+    form_data = [
+        canvas_objects.CourseItem.from_url(
+            url
+        ) for url in request.form.getlist('module_items')
+    ]
+
+    with ZipFile('course-archive.zip', 'w') as z_file:
+        for obj in form_data:
+            z_file.writestr(
+                obj.file_path,
+                obj.item_content()
+            )
+
+    return render_template(
+        'download_page.htm.j2',
+        data=form_data,
+        item_count=len(form_data))
 
 
 # Home page

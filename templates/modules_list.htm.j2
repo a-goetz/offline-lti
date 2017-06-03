@@ -1,0 +1,32 @@
+{% extends 'base.htm.j2' %}
+{% block content %}
+
+<div class="container">
+  <h1>Selected Course: {{ course_obj.get_name() }}</h1>
+  <form name="item_selection"
+  	action="{{ url_for('selected_items') }}"
+  	method="POST">
+	  <ol>
+	  {% for module in module_list %}
+	  	<li>{{ module['name'] }}
+	  		<ul class="no-bullet">
+		  	{% for item in module.get_module_items() %}
+		  		{% if item['type'] == 'Page' or item['type'] == 'File' %}
+		  		<li>
+		  			<input type="checkbox"
+		  				name="module_items"
+		  				value="{{ item['url'] }}">
+		  			{{ item['title'] }}
+		  		</li>	
+		  		{% endif %}
+		  	{% endfor %}
+	  		</ul>
+	  	</li>
+	  {% endfor %}
+	  </ol>
+	  <button type="submit">Export Content</button>
+  </form>
+</div>
+<p><a href="{{ url_for('index') }}"><button>Home</button></a></p>
+
+{% endblock content %}
