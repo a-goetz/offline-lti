@@ -61,7 +61,8 @@ def launch(lti=lti):
     # variables can be found here:
     # https://github.com/instructure/canvas-lms/blob/stable/gems/lti_outbound/lib/lti_outbound/tool_launch.rb
     session['lis_person_name_full'] = request.form.get('lis_person_name_full')
-    session['custom_canvas_user_id'] = request.form.get('custom_canvas_user_id')
+    session['custom_canvas_user_id'] = \
+        request.form.get('custom_canvas_user_id')
 
     session['custom_canvas_course_id'] = request.form.get(
         'custom_canvas_course_id')
