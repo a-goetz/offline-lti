@@ -1,5 +1,9 @@
+import os
 import requests
-from settings import CANVAS_API_KEY as api_key, CANVAS_API_URL as web_url
+if 'HEROKU_ENV' in os.environ:
+    from heroku_settings import CANVAS_API_KEY as api_key, CANVAS_API_URL as web_url
+else:
+    from settings import CANVAS_API_KEY as api_key, CANVAS_API_URL as web_url
 
 
 access_token = "?access_token=%s" % (api_key)
