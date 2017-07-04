@@ -1,4 +1,8 @@
-import settings
+import os
+if 'HEROKU_ENV' in os.environ:
+    import heroku_settings as settings
+else:
+    import settings
 
 
 class Config(object):

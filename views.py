@@ -3,10 +3,15 @@ from zipfile import ZipFile
 from pylti.flask import lti
 import logging
 import json
+import os
 from logging.handlers import RotatingFileHandler
 
-import settings
 import canvas_objects
+
+if 'HEROKU_ENV' in os.environ:
+    import heroku_settings as settings
+else:
+    import settings
 
 app = Flask(__name__)
 app.secret_key = settings.secret_key
