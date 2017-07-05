@@ -108,7 +108,7 @@ def selected_items():
     ]
 
     # static = 'tmp/'
-    download_location = 'tmp/' + \
+    download_location = '/tmp/' + \
         session['custom_canvas_user_id'] + \
         session['context_title'] + 'course-archive.zip'
     # download_to = static + download_location
