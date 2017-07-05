@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-<h1>Click <a href="{{ url_for('static', filename=download_location) }}">HERE</a> to download your files</h1>
+<h1>Click <a href="./tmp/{{ download_location }}">HERE</a> to download your files</h1>
 <h2>Items Downloaded: {{ item_count }}</h2>
 <ul class="no-bullet">
 {% for item in data %}
