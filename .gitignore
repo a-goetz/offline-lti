@@ -7,3 +7,4 @@ error.log
 test.db
 course-archive.zip
 static/downloads/*
+tmp/*

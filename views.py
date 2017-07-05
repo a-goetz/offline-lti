@@ -2,7 +2,6 @@ from flask import Flask, render_template, session, request, Response
 from zipfile import ZipFile
 from pylti.flask import lti
 import logging
-import json
 import os
 from logging.handlers import RotatingFileHandler
 
@@ -108,13 +107,13 @@ def selected_items():
         ) for url in request.form.getlist('module_items')
     ]
 
-    static = 'static/'
-    download_location = 'downloads/' + \
+    # static = 'tmp/'
+    download_location = 'tmp/' + \
         session['custom_canvas_user_id'] + \
         session['context_title'] + 'course-archive.zip'
-    download_to = static + download_location
+    # download_to = static + download_location
 
-    with ZipFile(download_to, 'w') as z_file:
+    with ZipFile(download_location, 'w') as z_file:
         for obj in form_data:
             z_file.writestr(
                 obj.file_path,
