@@ -100,6 +100,10 @@ def launch(lti=lti):
 def selected_items():
     #  This should return a list of the urls of all the checked boxes
     # body html uses unicode
+    from io import BytesIO
+    from flask import send_file
+
+    bufferfile = BytesIO()
 
     form_data = [
         canvas_objects.CourseItem.from_url(
@@ -107,25 +111,35 @@ def selected_items():
         ) for url in request.form.getlist('module_items')
     ]
 
-    # static = 'tmp/'
-    download_location = '/tmp/' + \
-        session['custom_canvas_user_id'] + \
+    # download_location = '/tmp/' + \
+    #     session['custom_canvas_user_id'] + \
+    #     session['context_title'] + 'course-archive.zip'
+    tmpfilename = session['custom_canvas_user_id'] + \
         session['context_title'] + 'course-archive.zip'
-    # download_to = static + download_location
 
-    with ZipFile(download_location, 'w') as z_file:
+    # with ZipFile(download_location, 'w') as z_file:
+    with ZipFile(bufferfile, mode='w') as z_file:
         for obj in form_data:
             z_file.writestr(
                 obj.file_path,
                 obj.item_content()
             )
+    bufferfile.seek(0)
 
-    return render_template(
-        'download_page.htm.j2',
-        data=form_data,
-        item_count=len(form_data),
-        download_location=download_location
+    # http://flask.pocoo.org/docs/0.12/api/#flask.send_file
+    return send_file(
+        bufferfile,
+        as_attachment=True,
+        attachment_filename=tmpfilename,
+        mimetype='application/zip'
     )
+
+    # return render_template(
+    #     'download_page.htm.j2',
+    #     data=form_data,
+    #     item_count=len(form_data),
+    #     download_location=download_location
+    # )
 
 
 # Home page
