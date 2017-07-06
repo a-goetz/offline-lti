@@ -9,9 +9,11 @@
 	  	action="{{ url_for('selected_items') }}"
 	  	method="POST">
 		<!-- Select All -->
-		<label for="select-all">
-			<input type="checkbox" name="select-all" id="select-all">Select All
-		</label>
+		<div class="checkbox">
+			<label for="select-all">
+				<input class="checkbox" type="checkbox" name="select-all" id="select-all">Select All
+			</label>
+		</div>
 	    <ol>
 		    {% for module in module_list %}
 		  	<li>{{ module['name'] }}
@@ -19,23 +21,25 @@
 			  	{% for item in module.get_module_items() %}
 			  		{% if item['type'] == 'Page' or item['type'] == 'File' %}
 			  		<li>
-			  			<label for="{{ item['title'] }}">
-			  			<input
-			  				class="form-control"
-			  				type="checkbox"
-			  				name="module_items"
-			  				value="{{ item['url'] }}"
-			  				id="{{ item['title'] }}">
-			  			{{ item['title'] }}
-			  			</label>
-			  		</li>	
+			  			<div class="checkbox">
+				  			<label for="{{ item['title'] }}">
+					  			<input
+					  				class="checkbox"
+					  				type="checkbox"
+					  				name="module_items"
+					  				value="{{ item['url'] }}"
+					  				id="{{ item['title'] }}">
+					  			{{ item['title'] }}
+				  			</label>
+			  			</div>
+			  		</li>
 			  		{% endif %}
 			  	{% endfor %}
 		  		</ul>
 		  	</li>
 		    {% endfor %}
 	    </ol>
-	    <button type="submit">Export Content</button>
+	    <button class="btn btn-primary" type="submit">Export Content</button>
     </form>
 </div>
 
