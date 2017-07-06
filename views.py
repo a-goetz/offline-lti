@@ -84,22 +84,13 @@ def launch(lti=lti):
         'modules_list.htm.j2',
         course_obj=this_course,
         module_list=these_modules)
-'''
-    # Write the lti params to the console
-    app.logger.info(json.dumps(request.form, indent=2))
-
-    return render_template(
-        'launch.htm.j2',
-        username=username,
-        coursename=coursename
-    )
-'''
 
 
 @app.route("/selected_items/", methods=['POST'])
 def selected_items():
-    #  This should return a list of the urls of all the checked boxes
-    # body html uses unicode
+    """
+    Returns a ZipFile of the contents selected.
+    """
     from io import BytesIO
     from flask import send_file
 
@@ -111,13 +102,9 @@ def selected_items():
         ) for url in request.form.getlist('module_items')
     ]
 
-    # download_location = '/tmp/' + \
-    #     session['custom_canvas_user_id'] + \
-    #     session['context_title'] + 'course-archive.zip'
     tmpfilename = session['custom_canvas_user_id'] + \
         session['context_title'] + 'course-archive.zip'
 
-    # with ZipFile(download_location, 'w') as z_file:
     with ZipFile(bufferfile, mode='w') as z_file:
         for obj in form_data:
             z_file.writestr(
@@ -133,13 +120,6 @@ def selected_items():
         attachment_filename=tmpfilename,
         mimetype='application/zip'
     )
-
-    # return render_template(
-    #     'download_page.htm.j2',
-    #     data=form_data,
-    #     item_count=len(form_data),
-    #     download_location=download_location
-    # )
 
 
 # Home page

@@ -3,12 +3,14 @@
 
 <div class="container">
     <h1>Selected Course: {{ course_obj.get_name() }}</h1>
-    <form name="item_selection"
-  	action="{{ url_for('selected_items') }}"
-  	method="POST">
+    <form
+	    class="form-group"
+	    name="item_selection"
+	  	action="{{ url_for('selected_items') }}"
+	  	method="POST">
 		<!-- Select All -->
-		<label>
-		<input type="checkbox" name="select-all" id="select-all">Select All
+		<label for="select-all">
+			<input type="checkbox" name="select-all" id="select-all">Select All
 		</label>
 	    <ol>
 		    {% for module in module_list %}
@@ -17,10 +19,13 @@
 			  	{% for item in module.get_module_items() %}
 			  		{% if item['type'] == 'Page' or item['type'] == 'File' %}
 			  		<li>
-			  			<label>
-			  			<input type="checkbox"
+			  			<label for="{{ item['title'] }}">
+			  			<input
+			  				class="form-control"
+			  				type="checkbox"
 			  				name="module_items"
-			  				value="{{ item['url'] }}">
+			  				value="{{ item['url'] }}"
+			  				id="{{ item['title'] }}">
 			  			{{ item['title'] }}
 			  			</label>
 			  		</li>	
