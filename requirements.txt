@@ -11,5 +11,5 @@ oauth==1.0.1
 oauth2==1.9.0.post1
 requests==2.17.3
 urllib3==1.21.1
-Werkzeug==0.11.11
+Werkzeug==0.15.3
 -e git+https://github.com/ucfcdl/pylti.git@roles#egg=PyLTI
